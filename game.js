@@ -50,4 +50,26 @@ document.addEventListener("mousemove",e=>{
     playerPaddle.position =( e.y / window.innerHeight) *100
 })
 
+
+let lastTouchY = null;
+let touchStartY = null;
+
+document.addEventListener("touchstart", e => {
+  const touch = e.touches[0];
+  touchStartY = touch.pageY;
+});
+
+document.addEventListener("touchmove", e => {
+  const touch = e.touches[0];
+  const touchY = touch.pageY;
+  const delta = touchY - (lastTouchY || touchStartY || touchY);
+  lastTouchY = touchY;
+  playerPaddle.position = Math.max(0, Math.min(100, playerPaddle.position + (delta / window.innerHeight) * 100));
+});
+
+document.addEventListener("touchend", e => {
+  lastTouchY = null;
+  touchStartY = null;
+});
+
 window.requestAnimationFrame(Update)
